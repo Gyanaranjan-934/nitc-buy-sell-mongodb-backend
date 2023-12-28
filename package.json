@@ -1,7 +1,7 @@
 {
-  "name": "youtube-backend",
+  "name": "nitc-buy-sell-backend",
   "version": "1.0.0",
-  "description": "youtube backend",
+  "description": "nitc backend",
   "main": "index.js",
   "type": "module",
   "scripts": {
