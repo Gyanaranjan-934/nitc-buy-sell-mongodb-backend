@@ -61,7 +61,8 @@ const productSchema = new Schema(
         },
         review: {
             type: Schema.Types.ObjectId,
-            ref: 'Review'
+            ref: 'Review',
+            default: null
         },
         tags: [
             {

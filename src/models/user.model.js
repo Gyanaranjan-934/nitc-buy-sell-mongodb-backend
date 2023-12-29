@@ -29,7 +29,11 @@ const userSchema = new Schema(
             type: String,
             required: true,
         },
-        avg_rating: {
+        tot_no_rating: {
+            type: Number,
+            default: 0,
+        },
+        tot_rating:{
             type: Number,
             default: 0,
         },

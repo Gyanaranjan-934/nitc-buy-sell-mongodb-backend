@@ -9,12 +9,12 @@ const createProduct = asyncHandler(async (req, res) => {
         // console.log(req);
         const { name, description, price, condition, } = req.body;
 
-        const { images } = req.files
+        const images  = await req.files
 
-        // console.log(req.files);
+        // console.log(images.length);
 
-        if (!price || isNaN(Number.parseFloat(price)) || images.length === 0) {
-            return res.status(400).json(new ApiError(400, "Invalid input. Please provide valid values for all required fields."));
+        if (!name || !price || isNaN(Number.parseFloat(price)) || images.length === 0) {
+            throw new ApiError(400, "Invalid input. Please provide valid values for all required fields.");
         }
 
 
@@ -23,13 +23,13 @@ const createProduct = asyncHandler(async (req, res) => {
 
         // set all images urls
         const imageUrls = [];
-        console.log('req.files:', req.files);
+        // console.log('req.files:', req.files);
 
         // Inside your loop
         for (let i = 0; i < images.length; i++) {
-            console.log(`Processing image ${i + 1}:`, req.files?.images[i]);
+            // console.log(`Processing image ${i + 1}:`, images[i]);
 
-            let imageLocalPath = req.files?.images[i]?.path;
+            let imageLocalPath = images[i]?.path;
 
             if (imageLocalPath) {
                 const imageCloudinaryUrl = await uploadOnCloudinary(imageLocalPath);
@@ -53,7 +53,7 @@ const createProduct = asyncHandler(async (req, res) => {
         if (product) {
             return res.status(201).json(new ApiResponse(200, product, "Product created successfully"));
         } else {
-            return res.status(400).json(new ApiError(400, "Product not created due to some error"))
+            throw ApiError(400, "Product not created due to some error");
         }
 
     } catch (error) {
