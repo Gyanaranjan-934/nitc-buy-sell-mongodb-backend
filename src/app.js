@@ -22,11 +22,13 @@ app.use(cookieParser());
 import userRouter from './routes/user.routes.js'
 import productRouter from './routes/product.routes.js'
 import reviewRouter from './routes/rating.routes.js'
+import chatRouter from './routes/chat.routes.js'
 
 
 // routes declarations
 app.use('/api/v1/users',userRouter)
 app.use('/api/v1/products',productRouter)
 app.use('/api/v1/reviews',reviewRouter)
+app.use('/api/v1/chats',chatRouter)
 
 export { app }

@@ -2,9 +2,9 @@ import mongoose, { Schema } from "mongoose";
 
 const reviewSchema = new Schema(
     {
-        buyer: {
+        product: {
             type: Schema.Types.ObjectId,
-            ref: "User"
+            ref: "Product"
         },
         review: {
             type: String,

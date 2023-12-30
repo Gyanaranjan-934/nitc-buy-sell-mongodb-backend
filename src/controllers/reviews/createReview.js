@@ -46,7 +46,7 @@ const createRating = asyncHandler(async (req, res) => {
         }
 
         const finalRating = await Review.create({
-            buyer: buyerId,
+            product: product?._id,
             review: fReview,
             rating: fRating
         })

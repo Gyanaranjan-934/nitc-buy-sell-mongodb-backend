@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const messageSchema = new Schema(
     {
-        user: {
+        sender: {
             type: Schema.Types.ObjectId,
             ref: "User",
         },
@@ -11,7 +11,7 @@ const messageSchema = new Schema(
             ref: "Chat",
             required: true
         },
-        text: {
+        messageBody: {
             type: String,
             required: true,
         },
