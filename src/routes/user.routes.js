@@ -1,13 +1,13 @@
 import { Router } from "express";
-import registerUser from '../controllers/users/registerUser.js'
+import registerUser from '../controllers/auth/registerUser.js'
 import {upload} from '../middlewares/multer.middleware.js'
-import loginUser from "../controllers/users/loginUser.js";
+import loginUser from "../controllers/auth/loginUser.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
-import logoutUser from "../controllers/users/logoutUser.js";
-import refreshAccessToken from "../controllers/users/refreshAccessToken.js";
-import updateUserAvatar from "../controllers/users/updateUserAvatar.js";
-import updateAccountDetails from "../controllers/users/updateAccountDetails.js";
-import changeCurrentPassword from "../controllers/users/changeCurrentPassword.js";
+import logoutUser from "../controllers/auth/logoutUser.js";
+import refreshAccessToken from "../controllers/auth/refreshAccessToken.js";
+import updateUserAvatar from "../controllers/auth/updateUserAvatar.js";
+import updateAccountDetails from "../controllers/auth/updateAccountDetails.js";
+import changeCurrentPassword from "../controllers/auth/changeCurrentPassword.js";
 
 const router = Router();
 

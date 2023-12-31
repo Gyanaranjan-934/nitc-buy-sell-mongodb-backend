@@ -7,7 +7,7 @@ const getMessages = asyncHandler(async (req, res) => {
     try {
         const { chatId } = req.body;
 
-        const messages = await Message.find({ chatId: chatId }).sort({ updatedAt: -1 });
+        const messages = await Message.find({ chat: chatId }).sort({ updatedAt: -1 });
 
         if(!messages){
             throw new ApiError(400,"Error getting messages");
