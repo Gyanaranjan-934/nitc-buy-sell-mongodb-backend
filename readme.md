@@ -1,4 +1,4 @@
-# Buy and Sell Marketplace API
+# NITC Buy Sell Marketplace API
 
 Welcome to the Buy and Sell Marketplace API! This API collection provides the essential functionality for creating an application where users can buy and sell old products through an online platform. The API includes features such as User Authentication, Product Management, Rating & Review, and a Real-time Chat application system.
 
