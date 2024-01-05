@@ -9,7 +9,9 @@ const getPostedItems = asyncHandler(async (req, res) => {
 
         const products = await Product.find({
             seller: user
-        });
+        }).populate("buyer","-password -refreshToken")
+        .populate("seller","-password -refreshToken")
+        .populate("review").populate("category");
 
         if (!products) {
             throw new ApiError(404, "You have not posted any products");

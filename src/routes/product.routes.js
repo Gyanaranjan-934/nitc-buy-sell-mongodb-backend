@@ -9,6 +9,8 @@ import deleteProduct from "../controllers/products/deleteProduct.js";
 import getCategories from "../controllers/others/getCategories.js";
 import getTags from "../controllers/others/getTags.js";
 import { getOneProduct, getAllProducts } from '../controllers/products/getProduct.js'
+import getPostedItems from "../controllers/products/getPostedItems.js";
+import getBoughtItems from "../controllers/products/getBoughtItems.js";
 
 const router = Router();
 
@@ -34,10 +36,12 @@ router.route('/update-product').put(
 );
 
 router.route('/delete-product').delete(verifyJWT, deleteProduct);
+router.route('/get-posted-products').get(verifyJWT, getPostedItems);
+router.route('/get-bought-products').get(verifyJWT, getBoughtItems);
 
-router.route('/get-categorys').get(getCategories);
-router.route('/get-tags').get(getTags);
-router.route('/get-products').get(getAllProducts);
-router.route('/get-product').get(getOneProduct);
+router.route('/get-categories').get(verifyJWT,getCategories);
+router.route('/get-tags').get(verifyJWT,getTags);
+router.route('/get-products').get(verifyJWT,getAllProducts);
+router.route('/get-product').get(verifyJWT,getOneProduct);
 
 export default router

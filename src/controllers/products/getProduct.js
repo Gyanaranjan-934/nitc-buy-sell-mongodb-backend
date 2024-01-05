@@ -9,11 +9,11 @@ const getOneProduct = asyncHandler(async (req, res) => {
 
     try {
         const product = await Product
-                        .findById(id)
-                        .populate({
-                            path: "seller",
-                            select: "-refreshToken -password",
-                        }).populate("review");
+            .findById(id)
+            .populate({
+                path: "seller",
+                select: "-refreshToken -password",
+            }).populate("review");
 
         if (!product) {
             throw new ApiError(404, "Product not found");
@@ -33,28 +33,30 @@ const getOneProduct = asyncHandler(async (req, res) => {
 const getAllProducts = asyncHandler(async (req, res) => {
     const { name } = req.query;
 
+    const nameQuery = name || "";
+
+    const user = req.user?._id;
+
     try {
-        const regExpression = new RegExp(name, 'i');
-        const products = await Product.find(
-            {
-                $or: [
-                    {
-                        name: regExpression
-                    },
-                    {
-                        description: regExpression
-                    },
-                    {
-                        slug: regExpression
-                    }
-                ]
-            }
-        ).populate({
+        const regExpression = new RegExp(nameQuery, 'i');
+        const products = await Product.find({
+            $and: [
+                {
+                    $or: [
+                        { name: regExpression },
+                        { description: regExpression },
+                        { slug: regExpression }
+                    ]
+                },
+                { isSold: false }, // Filter out sold products
+                { seller: { $ne: user } }, // Filter out products from the current user
+            ],
+        }).populate({
             path: "seller",
-            select: "-refreshToken -password",
+            select: "-refreshToken -password"
         }).populate("review");
 
-        if (!products) {
+        if (!products || products.length === 0) {
             throw new ApiError(404, "Products not found");
         }
 
@@ -68,7 +70,8 @@ const getAllProducts = asyncHandler(async (req, res) => {
             errors: error?.errors || [],
         });
     }
-})
+});
+
 
 export {
     getOneProduct,

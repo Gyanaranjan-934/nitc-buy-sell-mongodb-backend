@@ -1,3 +1,4 @@
+import { Category } from "../../models/category.model.js";
 import { Product } from "../../models/product.model.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
@@ -6,14 +7,23 @@ import { uploadOnCloudinary } from "../../utils/cloudinary.js";
 
 const createProduct = asyncHandler(async (req, res) => {
     try {
-        // console.log(req);
-        const { name, description, price, condition, } = req.body;
+        let { name, description, price, condition, category } = req.body;
 
-        const images  = await req.files
+        const images  = req.files
 
-        // console.log(images.length);
+        // check for the category
+        category = await JSON.parse(category)
+        let productCategory = "";
+        if(category._id){
+            productCategory = category._id;
+        }else{
+            // create a new category
+            const newCategory = await Category.create({ name:category });
+            productCategory = newCategory._id;
+        }
 
-        if (!name || !price || isNaN(Number.parseFloat(price)) || images.length === 0) {
+
+        if (!name || !price || isNaN(Number.parseFloat(price)) || images?.length === 0) {
             throw new ApiError(400, "Invalid input. Please provide valid values for all required fields.");
         }
 
@@ -23,12 +33,9 @@ const createProduct = asyncHandler(async (req, res) => {
 
         // set all images urls
         const imageUrls = [];
-        // console.log('req.files:', req.files);
 
         // Inside your loop
         for (let i = 0; i < images.length; i++) {
-            // console.log(`Processing image ${i + 1}:`, images[i]);
-
             let imageLocalPath = images[i]?.path;
 
             if (imageLocalPath) {
@@ -47,8 +54,13 @@ const createProduct = asyncHandler(async (req, res) => {
             images: imageUrls,
             condition,
             seller: req.user,
-            slug
+            slug,
+            category: productCategory
         })
+
+        const categroyObject = await Category.findById(productCategory);
+        categroyObject.products.push(product);
+        await categroyObject.save();
 
         if (product) {
             return res.status(201).json(new ApiResponse(200, product, "Product created successfully"));

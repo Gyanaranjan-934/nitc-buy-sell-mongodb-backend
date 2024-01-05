@@ -16,7 +16,9 @@ const getBoughtItems = asyncHandler(async (req, res) => {
                     buyer: user
                 }
             ]
-        });
+        }).populate("buyer","-password -refreshToken")
+        .populate("seller","-password -refreshToken")
+        .populate("review").populate("category");
 
         if (!products) {
             throw new ApiError(404, "You have not bought any products");

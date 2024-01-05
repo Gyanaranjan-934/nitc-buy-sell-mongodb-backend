@@ -44,7 +44,7 @@ const updateReview = asyncHandler(async (req, res) => {
         const oldReview = await Review.findOne(product?.review);
 
         const updatedReview = await Review.findByIdAndUpdate(
-            product?.review,
+            {_id: product?.review},
             {
                 rating: finalRating,
                 review: finalReview
@@ -55,6 +55,8 @@ const updateReview = asyncHandler(async (req, res) => {
         )
 
         if (updatedReview) {
+
+            // const finalReview = await Review.findById()
             
             product.review = finalRating?._id;
             
@@ -72,11 +74,11 @@ const updateReview = asyncHandler(async (req, res) => {
             return res.status(201).json(new ApiResponse(
                 201,
                 {
-                    finalRating,
+                    updatedReview,
                     seller,
                     product
                 },
-                "Rating created successfully"
+                "Rating updated successfully"
             ));
         } else {
             throw new ApiError(500,"Failed to update rating");

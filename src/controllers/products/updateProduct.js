@@ -15,8 +15,11 @@ const updateProduct = asyncHandler(async (req, res) => {
             throw new ApiError(400, "All the required fields must be set.");
         }
 
-        let { imagesToUpdate, sold } = req.body;
+        console.log(req.body);
 
+        let { sold } = req.body;
+        const images = req.files;
+        console.log(images);
         const user = req.user?._id;
 
         // Fetch the product by ID
@@ -38,34 +41,20 @@ const updateProduct = asyncHandler(async (req, res) => {
 
 
         // Initialize newImageUrls with existing images
-        let newImageUrls = product.images;
-
-        // Ensure imagesToUpdate is an array
-        if (imagesToUpdate && !Array.isArray(imagesToUpdate)) {
-            imagesToUpdate = [imagesToUpdate];
-        }
-
-        // Handle image updates
-        if (imagesToUpdate && imagesToUpdate.length > 0) {
-            const images = req.files;
-
-            // Convert string indices to integers and sort
-            imagesToUpdate = imagesToUpdate.map((str) => parseInt(str, 10)).sort((a, b) => a - b);
-
+        let newImageUrls =[];
+        if(images.length > 0) {
+            let oldImageUrls = product.images;
+            
+            for (let index = 0; index < oldImageUrls.length; index++) {
+                const url = oldImageUrls[index];
+                await deleteOnCloudinary(url);
+            }
             for (let i = 0; i < images.length; i++) {
                 const imageLocalPath = images[i].path;
+                
                 const imageCloudinaryUrl = await uploadOnCloudinary(imageLocalPath);
-                if (imagesToUpdate[i] < product.images.length) {
-                    // Update existing product image
-                    const oldImageUrl = await deleteOnCloudinary(product.images[i]);
-                    if (imageCloudinaryUrl) {
-                        newImageUrls[i] = imageCloudinaryUrl.url;
-                    }
-                } else {
-                    // Upload new product image
-                    if (imageCloudinaryUrl) {
-                        newImageUrls.push(imageCloudinaryUrl.url);
-                    }
+                if (imageCloudinaryUrl) {
+                    newImageUrls.push(imageCloudinaryUrl.url);
                 }
             }
         }
@@ -76,14 +65,14 @@ const updateProduct = asyncHandler(async (req, res) => {
 
         // If the item is sold, find the buyer from the email provided in the request body
         if (sold) {
-            
+
             if (!buyer || !finalPrice || isNaN(Number.parseFloat(finalPrice))) {
                 throw new ApiError(400, "Please enter the email address of the buyer and final price of the product");
             }
 
             actualFinalPrice = Number.parseFloat(finalPrice);
 
-            const buyerData = await User.findOne({email: buyer});
+            const buyerData = await User.findOne({ email: buyer });
 
             if (buyerData) {
                 actualBuyer = buyerData?._id;
@@ -103,13 +92,13 @@ const updateProduct = asyncHandler(async (req, res) => {
                 sold,
                 buyer: actualBuyer,
                 finalPrice: actualFinalPrice,
-                images: newImageUrls
+                images: newImageUrls.length>0 ? newImageUrls : product.images
             },
             {
                 new: true,
             }
         );
-
+        console.log(updatedProduct);
         if (!updatedProduct) {
             throw new ApiError(500, "Error in updating product, please try again later");
         }
@@ -118,6 +107,7 @@ const updateProduct = asyncHandler(async (req, res) => {
         return res.status(201).json(new ApiResponse(201, updatedProduct, "Product updated successfully"));
 
     } catch (error) {
+        console.log(error);
         // Handle errors and return appropriate response
         res.status(error?.statusCode || 500).json({
             message: error?.message || "Internal Server Error",

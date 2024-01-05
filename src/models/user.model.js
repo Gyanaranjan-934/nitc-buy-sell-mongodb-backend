@@ -29,6 +29,13 @@ const userSchema = new Schema(
             type: String,
             required: true,
         },
+        phoneNo:{
+            type: String,
+            required: true,
+            unique: true,
+            trim: true,
+            index: true,
+        },
         tot_no_rating: {
             type: Number,
             default: 0,

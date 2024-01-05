@@ -4,17 +4,17 @@ import { ApiResponse } from "../../utils/ApiResponse.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
-    const { fullName, email } = req.body;
+    const { fullName, phoneNo } = req.body;
 
-    if (!fullName || !email) {
-        throw new ApiError(400, "All fields must be provided");
+    if (!fullName && !phoneNo) {
+        throw new ApiError(400, "Fill atleast one field");
     }
 
     const user = await User.findByIdAndUpdate(
         req.user?._id,
         {
             fullName: fullName,
-            email
+            phoneNo: phoneNo,
         },
         {
             new: true
