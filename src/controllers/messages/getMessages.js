@@ -5,9 +5,10 @@ import { asyncHandler } from "../../utils/asyncHandler.js";
 
 const getMessages = asyncHandler(async (req, res) => {
     try {
-        const { chatId } = req.body;
+        const { chatId } = req.params;
 
-        const messages = await Message.find({ chat: chatId }).sort({ updatedAt: -1 });
+        const messages = await Message.find({ chat: chatId })
+                                    .populate("sender","-password -refreshToken");
 
         if(!messages){
             throw new ApiError(400,"Error getting messages");

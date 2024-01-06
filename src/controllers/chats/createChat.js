@@ -38,7 +38,7 @@ const createChat = asyncHandler(async (req, res) => {
             return res.status(200).json(new ApiResponse(200,prevChat,"Chat fetched successfully"));   
         }
 
-        const chat = await Chat.create({
+        let chat = await Chat.create({
             users: [user1, user2._id]
         });
 
@@ -46,11 +46,11 @@ const createChat = asyncHandler(async (req, res) => {
             throw new ApiError(400, "Error in creating chat");
         }
 
+        chat = await Chat.findById(chat._id).populate("users","-refreshToken -password");
+
         return res.status(200).json(new ApiResponse(
             200,
-            {
-                user1:req.user,
-                user2,
+            {   
                 chat
             },
             "Chat created successfully"

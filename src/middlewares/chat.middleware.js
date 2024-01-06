@@ -6,7 +6,8 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 // This middleware is responsible for verfiy the requesting user is actuall user of that chat or not
 export const verifyUserChat = asyncHandler(async (req, res, next) => {
     try {
-        const { chatId } = req.body;
+        const { chatId } = req.params;
+        console.log(req.params);
         const user = req.user?._id;
     
         const chat = await Chat.findOne({

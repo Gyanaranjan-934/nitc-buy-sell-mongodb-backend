@@ -32,33 +32,27 @@ const getOneProduct = asyncHandler(async (req, res) => {
 
 const getAllProducts = asyncHandler(async (req, res) => {
     const { name } = req.query;
-
-    const nameQuery = name || "";
-
     const user = req.user?._id;
 
     try {
-        const regExpression = new RegExp(nameQuery, 'i');
-        const products = await Product.find({
-            $and: [
-                {
-                    $or: [
-                        { name: regExpression },
-                        { description: regExpression },
-                        { slug: regExpression }
-                    ]
-                },
-                { isSold: false }, // Filter out sold products
-                { seller: { $ne: user } }, // Filter out products from the current user
-            ],
-        }).populate({
-            path: "seller",
-            select: "-refreshToken -password"
-        }).populate("review");
+        let queryConditions = { sold: false, seller: { $nin: [user?._id] } };
 
-        if (!products || products.length === 0) {
-            throw new ApiError(404, "Products not found");
+        if (name) {
+            const regExpression = new RegExp(name, 'i');
+            queryConditions.$or = [
+                { name: regExpression },
+                { description: regExpression },
+                { slug: regExpression }
+            ];
         }
+
+        const products = await Product.find(queryConditions)
+            .populate({
+                path: "seller",
+                select: "-refreshToken -password"
+            })
+            .populate("category")
+            .populate("review");
 
         return res.status(200).json(new ApiResponse(200, products, "Products fetched successfully"));
     } catch (error) {

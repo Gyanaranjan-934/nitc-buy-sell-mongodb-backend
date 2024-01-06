@@ -9,8 +9,8 @@ import getMessages from "../controllers/messages/getMessages.js";
 const router = Router();
 
 router.route('/create-chat').post(verifyJWT,createChat);
-router.route('/get-chats').get(verifyJWT,getChats);
-router.route('/send-message').post(verifyJWT,verifyUserChat,createMessage);
-router.route('/get-messages').get(verifyJWT,verifyUserChat,getMessages);
+router.route('/get-chats/').get(verifyJWT,getChats);
+router.route('/send-message/:chatId').post(verifyJWT,verifyUserChat,createMessage);
+router.route('/get-messages/:chatId').get(verifyJWT,verifyUserChat,getMessages);
 
 export default router
