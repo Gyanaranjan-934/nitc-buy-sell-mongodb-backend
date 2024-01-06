@@ -1,7 +1,12 @@
 import multer from 'multer'
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, "./public/temp")
+        const destinationPath = "./public/temp";
+        // Create the directory if it doesn't exist
+        if (!fs.existsSync(destinationPath)) {
+            fs.mkdirSync(destinationPath, { recursive: true });
+        }
+        cb(null, destinationPath);
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
