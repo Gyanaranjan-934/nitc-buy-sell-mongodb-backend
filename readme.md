@@ -35,7 +35,7 @@ This API collection is designed to facilitate the development of a web or mobile
 
 Retrieve a list of chats for the authenticated user.
 
-- **Endpoint:** `http://localhost:8000/api/v1/chats/get-chats`
+- **Endpoint:** `https://nitc-buysell-backend-rest-api.onrender.com/api/v1/chats/get-chats`
 - **Method:** GET
 - **Response:** No response body
 
@@ -43,7 +43,7 @@ Retrieve a list of chats for the authenticated user.
 
 Send a message in a specific chat.
 
-- **Endpoint:** `http://localhost:8000/api/v1/chats/send-message`
+- **Endpoint:** `https://nitc-buysell-backend-rest-api.onrender.com/api/v1/chats/send-message`
 - **Method:** POST
 - **Request Body:**
   ```json
@@ -58,7 +58,7 @@ Send a message in a specific chat.
 
 Retrieve messages from a specific chat.
 
-- **Endpoint:** `http://localhost:8000/api/v1/chats/get-messages`
+- **Endpoint:** `https://nitc-buysell-backend-rest-api.onrender.com/api/v1/chats/get-messages`
 - **Method:** GET
 - **Response:** No response body
 
@@ -71,7 +71,7 @@ var axios = require('axios');
 
 var config = {
   method: 'get',
-  url: 'http://localhost:8000/api/v1/chats/get-chats',
+  url: 'https://nitc-buysell-backend-rest-api.onrender.com/api/v1/chats/get-chats',
   headers: { }
 };
 
@@ -92,7 +92,7 @@ var data = '{"chatId":"65901d228fc99392eeba3210","messageBody":"Hello world"}';
 
 var config = {
   method: 'post',
-  url: 'http://localhost:8000/api/v1/chats/send-message',
+  url: 'https://nitc-buysell-backend-rest-api.onrender.com/api/v1/chats/send-message',
   headers: { },
   data: data
 };
@@ -113,7 +113,7 @@ var axios = require('axios');
 
 var config = {
   method: 'get',
-  url: 'http://localhost:8000/api/v1/chats/get-messages',
+  url: 'https://nitc-buysell-backend-rest-api.onrender.com/api/v1/chats/get-messages',
   headers: { }
 };
 
